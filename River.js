@@ -31,14 +31,27 @@ class River {
     }
   }
   
-  updateParticles() {
+updateParticles() {
   for (let p of this.particles) {
-    // Get tangent direction for the particle's current position
-    let angle = this.getTangentAngle(p.pos.x);
-    p.adjustVelocity(angle);
+    // Adjust the particle's velocity based on the river's tangent at its current y position
+    p.adjustVelocity(p.pos.y);
+
+    // Update the particle's position
     p.update();
+
+    // Get the x position of the river at the particle's current y
+    let riverX = this.getRiverX(p.pos.y);
+    let halfWidth = this.widths[floor(p.pos.y / 5)] / 2;
+
+    // Check if the particle is within the river's boundaries after the update
+    if (p.pos.x < riverX - halfWidth || p.pos.x > riverX + halfWidth) {
+      // Adjust the particle's x position back to the nearest point within the river
+      p.pos.x = constrain(p.pos.x, riverX - halfWidth, riverX + halfWidth);
+    }
   }
 }
+
+
 
 getTangentAngle(x) {
   // Calculate a slight difference along the x-axis to get two points and compute the tangent

@@ -20,7 +20,7 @@ class Particle {
     const angle = tangent.heading();
 
     // Limit the turning angle to avoid sharp turns
-    const maxTurnAngle = PI / 8; // adjust as needed
+    const maxTurnAngle = PI /10000000; // adjust as needed
     let turnAngle = angle - this.vel.heading();
     if (abs(turnAngle) > maxTurnAngle) {
       turnAngle = maxTurnAngle * Math.sign(turnAngle);
