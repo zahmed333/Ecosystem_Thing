@@ -4,6 +4,7 @@ function preload() {
   robinImage = loadImage("robinImage.png");
 }
 let tree;
+let cloud;
 
 
 function setup() {
@@ -13,6 +14,7 @@ function setup() {
   robin = new Robin(200, 100, robinImage);
   python = new Python(400, 300, 50, 1); // Start at center, 50 segments, speed of 2
   tree = new Tree(300, height/2, 30, 150, color(34, 139, 34)); // Example tree
+  cloud = new Cloud(); // Initialize the cloud
 
 }
 
@@ -36,6 +38,21 @@ function draw() {
   python.move();
   python.display();
   tree.display();
+  cloud.display();
+  cloud.move();
+
+  // Example condition to trigger lightning
+  if (frameCount % 120 === 0) { // Trigger lightning every 120 frames
+    cloud.triggerLightning();
+  }
+
+  // Check if lightning hits Robin
+  if (cloud.lightning) {
+    let distanceToRobin = dist(cloud.x, cloud.y, robin.x, robin.y);
+    if (distanceToRobin < 100) { // Example distance threshold
+      robin.reactToLightning();
+    }
+  }
   robin.move();
   robin.display();
 }
