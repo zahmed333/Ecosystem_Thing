@@ -6,11 +6,29 @@ class Robin extends Animal {
     this.speed = 3; // Set the speed specific for Robin, overriding the default in Animal
     this.scaledWidth = img.width / 5; // Set the scaled width specific for Robin
     this.scaledHeight = img.height / 5; // Set the scaled height specific for Robin
+    this.stunned = false;
+    this.stunnedDuration = 0.5; // Duration for how long the Robin is stunned
   }
 
   reactToLightning() {
-    this.hitByLightning = true;
     console.log("Robin hit by lightning!");
+    this.stunned = true;
+    this.stunnedDuration = 120; // Example: stunned for 120 frames
+  }
+
+  update() {
+    if (this.stunned) {
+      this.stunnedDuration--;
+      if (this.stunnedDuration <= 0) {
+        this.stunned = false; // Reset stunned state
+      }
+    }
+  }
+
+  move() {
+    if (!this.stunned) {
+      super.move();
+    }
   }
   
   display() {

@@ -5,6 +5,7 @@ function preload() {
 }
 let tree;
 let cloud;
+const LIGHTNING = 300;
 
 
 function setup() {
@@ -41,10 +42,16 @@ function draw() {
   cloud.display();
   cloud.move();
 
+  
+  // Trigger lightning every 120 frames and pass Robin's position
   // Example condition to trigger lightning
-  if (frameCount % 120 === 0) { // Trigger lightning every 120 frames
-    cloud.triggerLightning();
+  if (frameCount % LIGHTNING === 0) {
+    let hit = cloud.triggerLightning(robin.x, robin.y);
+    if (hit) {
+      robin.reactToLightning();
+    }
   }
+
 
   // Check if lightning hits Robin
   if (cloud.lightning) {
@@ -53,6 +60,46 @@ function draw() {
       robin.reactToLightning();
     }
   }
+  robin.update(); // Update Robin's state each frame
   robin.move();
   robin.display();
 }
+
+
+function drawLightning(cloudX, cloudY, robinX, robinY) {
+  let xCoord1 = cloudX;
+  let yCoord1 = cloudY;
+  let xCoord2 = cloudX;
+  let yCoord2 = cloudY;
+  let hitDetected = false;
+
+  for (let i = 0; i < 20; i++) {
+    xCoord1 = xCoord2;
+    yCoord1 = yCoord2;
+
+    // Direction towards Robin
+    let dirX = robinX - xCoord1;
+    let dirY = robinY - yCoord1;
+
+    // Normalize direction and add randomness
+    let magnitude = sqrt(dirX * dirX + dirY * dirY);
+    dirX /= magnitude;
+    dirY /= magnitude;
+
+    xCoord2 = xCoord1 + dirX * int(random(5, 20)) + int(random(-10, 10));
+    yCoord2 = yCoord1 + dirY * int(random(5, 20)) + int(random(-10, 10));
+
+    strokeWeight(random(1, 3));
+    stroke(255, 255, random(0, 255));
+    line(xCoord1, yCoord1, xCoord2, yCoord2);
+
+    // Check if lightning is close to Robin
+    if (dist(xCoord2, yCoord2, robinX, robinY) < 50) { // Adjust the threshold as needed
+      hitDetected = true;
+      break; // Stop drawing if close to Robin
+    }
+  }
+
+  return hitDetected;
+}
+
