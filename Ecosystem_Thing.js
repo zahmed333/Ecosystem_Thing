@@ -1,22 +1,34 @@
 function preload() {
   // Load the image before setup runs
-  tigerImage = loadImage("tigerImage.png");
-  robinImage = loadImage("robinImage.png");
+  tigerImages = {
+    left: loadImage("tigerLeft.png"),
+    right: loadImage("tigerRight.png"),
+    up: loadImage("tigerUp.png"),
+    down: loadImage("tigerDown.png"),
+    jumpLeft: loadImage("tigerRiverLeft.png"),
+    jumpRight: loadImage("tigerRiverRight.png")
+  };
+  robinImages = {
+    right: loadImage("robinRight.png"),
+    left: loadImage("robinLeft.png")
+  };
 }
+let tigerImages;
+let robinImages;
 let tree;
 let cloud;
 const LIGHTNING = 300;
-
+let fractalTree;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   river = new River();
-  tiger = new Tiger(800, 100, tigerImage);
-  robin = new Robin(200, 100, robinImage);
+  tiger = new Tiger(800, 100, tigerImages);
+  robin = new Robin(200, 100, robinImages);
   python = new Python(400, 300, 50, 1); // Start at center, 50 segments, speed of 2
   tree = new Tree(300, height/2, 30, 150, color(34, 139, 34)); // Example tree
   cloud = new Cloud(); // Initialize the cloud
-
+  fractalTree = new FractalTree(createVector(width - 150, height), [color(0, 255, 0), color(34, 139, 34)], color(139, 69, 19));
 }
 
 function draw() {
@@ -39,6 +51,7 @@ function draw() {
   python.move();
   python.display();
   tree.display();
+  fractalTree.draw();
   cloud.display();
   cloud.move();
 

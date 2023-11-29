@@ -15,6 +15,18 @@ class River {
     }
   }
 
+  getRiverBoundaries(y) {
+    let index = floor(y / 5);
+    if (index >= 0 && index < this.points.length) {
+      let halfWidth = this.widths[index] / 2;
+      return {
+        left: this.points[index].x - halfWidth,
+        right: this.points[index].y + halfWidth
+      };
+    }
+    return { left: width / 2 - 75, right: width / 2 + 75 }; // Default boundaries
+  }
+
   getRiverX(y) {
     let index = floor(y / 5);
     if (index >= 0 && index < this.points.length) {

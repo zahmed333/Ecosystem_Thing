@@ -1,13 +1,13 @@
-// Robin class extending Animal
 class Robin extends Animal {
-  constructor(x, y, img) {
-    super(x, y, img); // Call the parent class constructor with the necessary arguments
-    this.hitByLightning = false; // Flag to indicate if hit by lightning
-    this.speed = 3; // Set the speed specific for Robin, overriding the default in Animal
-    this.scaledWidth = img.width / 5; // Set the scaled width specific for Robin
-    this.scaledHeight = img.height / 5; // Set the scaled height specific for Robin
+  constructor(x, y, images) {
+    super(x, y, images.right); // Start with the right image
+    this.images = images; // Store the images
+    this.currentImage = images.right; // Current image displayed
+    this.speedX = 3; // Horizontal speed
+    this.scaledWidth = images.right.width / 5; // Set the scaled width specific for Robin
+    this.scaledHeight = images.right.height / 5; // Set the scaled height specific for Robin
     this.stunned = false;
-    this.stunnedDuration = 0.5; // Duration for how long the Robin is stunned
+    this.stunnedDuration = 0; // Duration for how long the Robin is stunned
   }
 
   reactToLightning() {
@@ -27,20 +27,32 @@ class Robin extends Animal {
 
   move() {
     if (!this.stunned) {
-      super.move();
+      // Update position based on speed
+      this.x += this.speedX;
+
+      // Check boundaries for horizontal movement
+      if (this.x > width - this.scaledWidth || this.x < 0) {
+        this.speedX *= -1;
+      }
+
+      // Update image based on direction
+      if (this.speedX > 0) {
+        this.currentImage = this.images.right;
+      } else {
+        this.currentImage = this.images.left;
+      }
     }
   }
-  
+
   display() {
-    if (this.hitByLightning) {
+    if (this.stunned) {
       // Draw an 'X' instead of the usual robin image
       stroke(255, 0, 0); // Red color for the 'X'
       strokeWeight(3);
       line(this.x - 10, this.y - 10, this.x + 10, this.y + 10);
       line(this.x + 10, this.y - 10, this.x - 10, this.y + 10);
     } else {
-      super.display(); // Call the display method of the parent class
+      image(this.currentImage, this.x, this.y, this.scaledWidth, this.scaledHeight);
     }
   }
-  
 }
