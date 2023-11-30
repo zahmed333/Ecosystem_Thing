@@ -17,8 +17,9 @@ let tigerImages;
 let robinImages;
 let tree;
 let cloud;
-const LIGHTNING = 300;
+const LIGHTNING = 600;
 let fractalTree;
+let scoreboard;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -29,6 +30,12 @@ function setup() {
   tree = new Tree(300, height/2, 30, 150, color(34, 139, 34)); // Example tree
   cloud = new Cloud(); // Initialize the cloud
   fractalTree = new FractalTree(createVector(width - 150, height), [color(0, 255, 0), color(34, 139, 34)], color(139, 69, 19));
+  scoreboard = {
+    "Refugee Robin": 0,
+    "Trafficking Tiger": 0,
+    "9/11 Nimbus": 0,
+    "Policy Python": 0
+  };
 }
 
 function draw() {
@@ -76,8 +83,73 @@ function draw() {
   robin.update(); // Update Robin's state each frame
   robin.move();
   robin.display();
+
+  let collisionThreshold = 30; // Example threshold, adjust as needed
+  if (checkCollision(robin, tiger, collisionThreshold)) {
+    updateScore(tiger, 1, scoreboard); // Tiger gets a point for colliding with Robin
+  }
+  handleGameLogic(robin, tiger, python, cloud, scoreboard);
+
+
+  // Display the scoreboard
+  displayScoreboard(scoreboard);
 }
 
+function handleGameLogic(robin, tiger, python, cloud, scoreboard) {
+  let collisionThreshold = 30; // Example threshold, adjust as needed
+
+  // Handle Robin crossing the border
+  if (robin.handleBorderCrossing()) {
+    scoreboard["Refugee Robin"] += 1;
+  }
+  if (tiger.handleBorderCrossing()) {
+    scoreboard["Trafficking Tiger"] += 1;
+  }
+
+  // Check collision between Tiger and Robin
+  if (checkCollision(robin, tiger, collisionThreshold)) {
+    scoreboard["Trafficking Tiger"] += 1;
+  }
+
+  // Check collision between Python and Tiger/Robin
+  if (checkCollision(python, tiger, collisionThreshold)) {
+    scoreboard["Policy Python"] += 1; // Reset Tiger's points or other logic
+    scoreboard["Trafficking Tiger"] -= 1;
+  }
+  if (checkCollision(python, robin, collisionThreshold) && robin.isInTree) {
+    scoreboard["Refugee Robin"] -= 1;
+    scoreboard["Policy Python"] += 1; // Implement logic for attacking Robin in the tree
+  }
+}
+
+function displayScoreboard(scoreboard) {
+  // Set the position and style for the scoreboard
+  let x = 10; // X position of the scoreboard
+  let y = height - 200; // Y position of the scoreboard
+  let lineHeight = 20; // Line height for each score entry
+
+  fill(255); // White text color
+  textSize(16); // Text size
+  noStroke(); // No border for the text
+
+  // Iterate through the scoreboard object and display each score
+  for (let entity in scoreboard) {
+    text(`${entity}: ${scoreboard[entity]}`, x, y);
+    y += lineHeight; // Move to the next line for the next entity
+  }
+}
+
+function checkCollision(entity1, entity2, distanceThreshold) {
+  let dx = entity1.x - entity2.x;
+  let dy = entity1.y - entity2.y;
+  return Math.sqrt(dx * dx + dy * dy) < distanceThreshold;
+}
+ function updateScore(entity, points, scoreboard) {
+  if (!scoreboard[entity.name]) {
+    scoreboard[entity.name] = 0;
+  }
+  scoreboard[entity.name] += points;
+}
 
 function drawLightning(cloudX, cloudY, robinX, robinY) {
   let xCoord1 = cloudX;
@@ -109,10 +181,11 @@ function drawLightning(cloudX, cloudY, robinX, robinY) {
     // Check if lightning is close to Robin
     if (dist(xCoord2, yCoord2, robinX, robinY) < 50) { // Adjust the threshold as needed
       hitDetected = true;
+      scoreboard["9/11 Nimbus"] += 1;
+      scoreboard["Refugee Robin"] -= 1;
       break; // Stop drawing if close to Robin
     }
   }
 
   return hitDetected;
 }
-

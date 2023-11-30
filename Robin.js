@@ -8,6 +8,12 @@ class Robin extends Animal {
     this.scaledHeight = images.right.height / 5; // Set the scaled height specific for Robin
     this.stunned = false;
     this.stunnedDuration = 0; // Duration for how long the Robin is stunned
+    this.hasCrossed = false;
+    this.isInTree = false;
+  }
+
+  updateTreeStatus(isInTree) {
+    this.isInTree = isInTree;
   }
 
   reactToLightning() {
