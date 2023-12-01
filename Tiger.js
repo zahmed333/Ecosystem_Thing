@@ -19,12 +19,16 @@ class Tiger extends Animal {
 
     // Check boundaries for horizontal movement
     if (this.x > width - this.scaledWidth || this.x < 0) {
-      this.speedX = -this.speedX + random(-1, 1); // Randomize new direction
+      this.speedX *= -1;
     }
 
     // Check boundaries for vertical movement
-    if (this.y > height - this.scaledHeight || this.y < 0) {
-      this.speedY = -this.speedY + random(-1, 1); // Randomize new direction
+    if (this.y > height - this.scaledHeight) {
+      this.y = height - this.scaledHeight; // Keep tiger above the bottom edge
+      this.speedY *= -1;
+    } else if (this.y < 0) {
+      this.y = 0; // Keep tiger below the top edge
+      this.speedY *= -1;
     }
 
     // Get river boundaries at tiger's y-coordinate
@@ -47,12 +51,8 @@ class Tiger extends Animal {
       // End jump when tiger reaches other side of the river
       if (this.x >= riverBoundaries.right) {
         this.isJumping = false;
-        this.y = this.jumpYStart;
+        // Reset y to a consistent ground level if needed
       }
-    } else {
-      // Ensure continuous movement
-      if (Math.abs(this.speedX) < 1) this.speedX = random(1, 3) * (this.speedX < 0 ? -1 : 1);
-      if (Math.abs(this.speedY) < 1) this.speedY = random(1, 3) * (this.speedY < 0 ? -1 : 1);
     }
 
     // Update image based on movement direction

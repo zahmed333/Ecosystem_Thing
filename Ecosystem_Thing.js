@@ -34,7 +34,8 @@ function setup() {
     "Refugee Robin": 0,
     "Trafficking Tiger": 0,
     "9/11 Nimbus": 0,
-    "Policy Python": 0
+    "Policy Python": 0,
+    "Withering Wishes": 0
   };
 }
 
@@ -72,6 +73,10 @@ function draw() {
     }
   }
 
+  if (frameCount % 1000 === 0) {
+    scoreboard["Withering Wishes"] -= 1;
+  }
+
 
   // Check if lightning hits Robin
   if (cloud.lightning) {
@@ -84,10 +89,8 @@ function draw() {
   robin.move();
   robin.display();
 
-  let collisionThreshold = 30; // Example threshold, adjust as needed
-  if (checkCollision(robin, tiger, collisionThreshold)) {
-    updateScore(tiger, 1, scoreboard); // Tiger gets a point for colliding with Robin
-  }
+  let collisionThreshold = 30;
+
   handleGameLogic(robin, tiger, python, cloud, scoreboard);
 
 
@@ -96,7 +99,7 @@ function draw() {
 }
 
 function handleGameLogic(robin, tiger, python, cloud, scoreboard) {
-  let collisionThreshold = 30; // Example threshold, adjust as needed
+  let collisionThreshold = 30;
 
   // Handle Robin crossing the border
   if (robin.handleBorderCrossing()) {
@@ -143,12 +146,6 @@ function checkCollision(entity1, entity2, distanceThreshold) {
   let dx = entity1.x - entity2.x;
   let dy = entity1.y - entity2.y;
   return Math.sqrt(dx * dx + dy * dy) < distanceThreshold;
-}
- function updateScore(entity, points, scoreboard) {
-  if (!scoreboard[entity.name]) {
-    scoreboard[entity.name] = 0;
-  }
-  scoreboard[entity.name] += points;
 }
 
 function drawLightning(cloudX, cloudY, robinX, robinY) {
