@@ -6,12 +6,18 @@ class Python {
     this.length = length;
     this.tongueLength = 15;
     this.tongueOut = false;
+    this.x = this.position.x;
+    this.y = this.position.y;
   }
 
   move() {
     this.position.add(this.velocity);
     this.position.x = (this.position.x + width) % width;
     this.position.y = (this.position.y + height) % height;
+
+        // Update x and y for collision detection
+    this.x = this.position.x;
+    this.y = this.position.y;
 
     // Flick tongue in and out
     if (frameCount % 60 === 0) { // Every 60 frames change the state

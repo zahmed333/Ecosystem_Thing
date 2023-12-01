@@ -115,7 +115,7 @@ function handleGameLogic(robin, tiger, python, cloud, scoreboard) {
   }
 
   // Check collision between Python and Tiger/Robin
-  if (checkCollision(python, tiger, collisionThreshold)) {
+  if (checkCollision(python, tiger, 30)) {
     scoreboard["Policy Python"] += 1; // Reset Tiger's points or other logic
     scoreboard["Trafficking Tiger"] -= 1;
   }
